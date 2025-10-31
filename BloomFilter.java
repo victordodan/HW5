@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Victor Dodan / 002
  *
  *   Note, additional comments provided throughout source code is
  *   for educational purposes.
@@ -24,9 +24,9 @@ import java.lang.Math;
  * required for the set. It effectively works as follows:
  *    1) We allocate 'm' bits to represent the set data.
  *    2) We provide a hash function, which, instead of a single hash code, 
-         produces'k' hash codes and sets those bits.
+ produces'k' hash codes and sets those bits.
  *    3) To add an element to the set, we derive bit indexes from all 'k' 
-         hash codes and set those bits.
+ hash codes and set those bits.
  *    4) To determine if an element is in the set, we again calculate the 
  *       corresponding hash codes and bit indexes, and say it is likely 
  *       present if and only if all corresponding bits are set.
@@ -95,21 +95,21 @@ class BloomFilter {
      * Additional discussion on hash implementation:
      *
      * Notice that Java's hash table implementation — and hence implementations
-     * of hashCode() — don't require the goals above to be met. Java maps and 
+     * of hashCode() — don't require the goals above to be met. Java maps and
      * sets, rather than storing just the hash code, store the actual key object.
      * This means that implementations of hashCode() generally only need to
      * be "fairly good". It isn't the end of the world if two key objects have
      * the same hash function, because the keys themselves are also compared in
      * deciding if a match has been found.
      *
-     * Below implements a 64-bit Linear Congruential Generator (LCG). It uses 
-     * a table of 256 random values indexed by successive bytes in the data, 
+     * Below implements a 64-bit Linear Congruential Generator (LCG). It uses
+     * a table of 256 random values indexed by successive bytes in the data,
      * and recommends a multiple suitable for an LCG with a modulus of 2^64,
      * which is effectively what we have when we multiple using 64-bit long.
      *
-     * The value of HMULT is found to be a good practice with 64-bit LCG. It 
-     * has roughly half of its bits set and is 'virtually' prime (it is 
-     * composed of three prime factors). The value of HSTART is arbitrary, 
+     * The value of HMULT is found to be a good practice with 64-bit LCG. It
+     * has roughly half of its bits set and is 'virtually' prime (it is
+     * composed of three prime factors). The value of HSTART is arbitrary,
      * essentially any value would do.
      *
      * Fore more information:
@@ -217,14 +217,14 @@ class BloomFilter {
 
     public boolean contains(String s) {
 
-        // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE
-        //
-        // HINT: the bitmap is the private class variable 'data', and it is
-        // of type BitSet (Java class BitSet). See Oracle documentation for
-        // this class on available methods. You can also see how method 'add'
-        // in this class uses the object.
-
-        return false;
+        for (int k = 0; k < noHashes; k++) {
+            long hc = hashCode(s, k);
+            int bitNo = (int) (hc) & this.hashMask;
+            if (!data.get(bitNo)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
